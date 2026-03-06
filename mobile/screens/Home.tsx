@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Animated } from "react-native";
 import Fab from "../components/Fab";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { AddLotteryScreenNavigationProp } from "../types";
 import { MaterialIcons } from "@expo/vector-icons";
 import LotteryList from "../components/LotteryList";
 import useLotteries from "../hooks/useLotteries";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import useAsyncStorage from "../hooks/useAsyncStorage";
 
 const Home = () => {
@@ -15,6 +15,8 @@ const Home = () => {
     const { navigate } = useNavigation<AddLotteryScreenNavigationProp>();
     const { storedData, getStoredData } = useAsyncStorage();
     const registeredLotteries = storedData || [];
+
+    const scrollY = useRef(new Animated.Value(0)).current;
    
     useFocusEffect(
         useCallback(() => {
@@ -35,6 +37,24 @@ const Home = () => {
 
     const registerBackgroundColor = selectedLotteries.length > 0 ? '#84a9e0' : '#CCCCCC';
 
+    const height = scrollY.interpolate({  
+        inputRange: [0, 200],
+        outputRange: [100, 50],
+        extrapolate: 'clamp', 
+    });
+
+    const opacity = scrollY.interpolate({
+        inputRange: [0, 100],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+    });
+
+    const scale = scrollY.interpolate({  
+        inputRange: [0, 200],
+        outputRange: [1, 0.5],
+        extrapolate: 'clamp', 
+    });
+
 
     return <View style={styles.container}>
         <TouchableOpacity
@@ -45,16 +65,25 @@ const Home = () => {
       >
         <Text>Register</Text>
       </TouchableOpacity>
-        <View style={styles.titleContainer}>
-            <Text style={styles.title}>Lotteries</Text>
+        <Animated.View 
+        style={[
+           
+            height,
+            opacity,
+            { transform: [{ scale }] }
+        ]}>
+           <View style={ styles.titleContainer }>
+             <Text style={styles.title}>Lotteries</Text>
             <MaterialIcons name="casino" size={36} color="black" />
-        </View>
+           </View>
+        </Animated.View>
         {lotteries.loading ? <ActivityIndicator size="large" color="#ea5382" /> : (
             <LotteryList
                 lotteries={lotteries.data}
                 selectedLotteries={selectedLotteries}
                 onPress={handleSelect}
                 registeredLotteries={registeredLotteries}
+                scrollY={scrollY}
             />
         )}
         <Fab onPress={() => navigate('AddLottery')} />

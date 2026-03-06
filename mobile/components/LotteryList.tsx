@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { View, Text, StyleSheet, FlatList, Pressable, Animated } from "react-native";
 import { Lottery } from "../../backend/types";
 import Search from "./Search";
 import { useMemo, useState } from "react";
@@ -8,9 +8,10 @@ type LotteryListProps = {
     selectedLotteries: Array<string>;
     onPress: (lotteryId: string) => void;
     registeredLotteries: Array<string>;
+    scrollY: Animated.Value;
 }   
 
-const LotteryList = ({ lotteries, selectedLotteries, onPress, registeredLotteries }: LotteryListProps) => {
+const LotteryList = ({ lotteries, selectedLotteries, onPress, registeredLotteries, scrollY }: LotteryListProps) => {
     const [search, setSearch] = useState('');
     const filteredLotteries = useMemo(() => {
         return lotteries.filter((lottery) =>
@@ -41,10 +42,14 @@ const LotteryList = ({ lotteries, selectedLotteries, onPress, registeredLotterie
         <View>
             <Search value={search} onSearch={setSearch} />
             {filteredLotteries.length > 0 ? 
-            <FlatList
+            <Animated.FlatList
                 style={styles.list}
                 data={filteredLotteries}
                 renderItem={({ item }) => <Card lottery={item} />}
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                    { useNativeDriver: false },
+                  )}
             />
             : <Text style={styles.noLotteriesFound}>No search results for '{search}'</Text>}
         </View>
