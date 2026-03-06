@@ -1,5 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { DispatchWithoutAction } from "react";
 
 export type Status = 'running' | 'finished';
 
@@ -31,3 +32,13 @@ export type LotteryDetailsNavigationProp = NativeStackNavigationProp<
   StackList,
   'LotteryDetails'
 >;
+
+export enum LotteryListSortingOptions {
+  Ascending,
+  Descending,
+}
+
+export interface LotteriesSortingContextValue {
+  selectedSorting: LotteryListSortingOptions;
+  switchSorting: DispatchWithoutAction;
+}

@@ -7,6 +7,8 @@ import LotteryList from "../components/LotteryList";
 import useLotteries from "../hooks/useLotteries";
 import { useCallback, useRef, useState } from "react";
 import useAsyncStorage from "../hooks/useAsyncStorage";
+import { LotteriesSortingContextProvider } from "../contexts/LotteriesSortingContext";
+import { HomeHeader } from "../components/HomeHeader";
 
 const Home = () => {
 
@@ -35,8 +37,6 @@ const Home = () => {
         });
     }
 
-    const registerBackgroundColor = selectedLotteries.length > 0 ? '#84a9e0' : '#CCCCCC';
-
     const height = scrollY.interpolate({  
         inputRange: [0, 200],
         outputRange: [100, 50],
@@ -56,38 +56,35 @@ const Home = () => {
     });
 
 
-    return <View style={styles.container}>
-        <TouchableOpacity
-        accessibilityRole="button"
-        onPress={() => navigate('Register', { selectedLotteries })}
-        style={[styles.registerButton, { backgroundColor: registerBackgroundColor }]}
-        disabled={selectedLotteries.length === 0}
-      >
-        <Text>Register</Text>
-      </TouchableOpacity>
-        <Animated.View 
-        style={[
-           
-            height,
-            opacity,
-            { transform: [{ scale }] }
-        ]}>
-           <View style={ styles.titleContainer }>
-             <Text style={styles.title}>Lotteries</Text>
-            <MaterialIcons name="casino" size={36} color="black" />
-           </View>
-        </Animated.View>
-        {lotteries.loading ? <ActivityIndicator size="large" color="#ea5382" /> : (
-            <LotteryList
-                lotteries={lotteries.data}
-                selectedLotteries={selectedLotteries}
-                onPress={handleSelect}
-                registeredLotteries={registeredLotteries}
-                scrollY={scrollY}
-            />
-        )}
-        <Fab onPress={() => navigate('AddLottery')} />
-    </View>
+    return (
+    <LotteriesSortingContextProvider>
+        <View style={styles.container}>
+            <HomeHeader selectedLotteries={selectedLotteries} />
+            <Animated.View 
+            style={[
+            
+                height,
+                opacity,
+                { transform: [{ scale }] }
+            ]}>
+            <View style={ styles.titleContainer }>
+                <Text style={styles.title}>Lotteries</Text>
+                <MaterialIcons name="casino" size={36} color="black" />
+            </View>
+            </Animated.View>
+            {lotteries.loading ? <ActivityIndicator size="large" color="#ea5382" /> : (
+                <LotteryList
+                    lotteries={lotteries.data}
+                    selectedLotteries={selectedLotteries}
+                    onPress={handleSelect}
+                    registeredLotteries={registeredLotteries}
+                    scrollY={scrollY}
+                />
+            )}
+            <Fab onPress={() => navigate('AddLottery')} />
+        </View>
+        </LotteriesSortingContextProvider>
+        )
 
 };
 
@@ -97,6 +94,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         paddingTop: 20,
+        position: 'relative',
+        width: '100%',
     },
     titleContainer: {
         flexDirection: 'row',

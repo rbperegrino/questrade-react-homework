@@ -3,7 +3,8 @@ import { Lottery } from "../../backend/types";
 import Search from "./Search";
 import { useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { LotteryDetailsNavigationProp } from "../types";
+import { LotteryDetailsNavigationProp, LotteryListSortingOptions } from "../types";
+import { useLotteriesSortingContext } from "../contexts/LotteriesSortingContext";
 
 type LotteryListProps = {
     lotteries: Array<Lottery>;
@@ -16,11 +17,20 @@ type LotteryListProps = {
 const LotteryList = ({ lotteries, selectedLotteries, onPress, registeredLotteries, scrollY }: LotteryListProps) => {
     const [search, setSearch] = useState('');
     const { navigate } = useNavigation<LotteryDetailsNavigationProp>();
-    const filteredLotteries = useMemo(() => {
-        return lotteries.filter((lottery) =>
-            lottery.name.includes(search),
-        );
-    }, [lotteries, search]);
+
+    const { selectedSorting } = useLotteriesSortingContext();
+
+    const filteredLotteries = useMemo(
+        () =>
+            lotteries
+                ?.filter((lottery) => lottery.name.includes(search))
+                .sort((a, b) =>
+                selectedSorting === LotteryListSortingOptions.Ascending
+                    ? Number(a.prize) - Number(b.prize)
+                    : Number(b.prize) - Number(a.prize),
+                ),
+    [search, lotteries, selectedSorting],
+  );
     
     const Card = ({ lottery }: { lottery: Lottery }) => {
         const isSelected = selectedLotteries.includes(lottery.id);
