@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/elements": "^2.9.10",
     "@react-navigation/native": "^7.1.33",
     "@react-navigation/native-stack": "^7.14.4",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@callstack/eslint-config": "^15.0.0",
+    "@react-native-community/cli": "^20.1.2",
     "@types/react": "~19.2.2",
     "eslint": "^8.57.1",
     "typescript": "~5.9.2"
