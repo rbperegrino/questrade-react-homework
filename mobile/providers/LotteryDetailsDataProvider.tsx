@@ -13,6 +13,7 @@ children,
 lotteryId,
 }: LotteryDetailsDataProviderProps) => {
 
+
     const { data, loading } = useLotteryDetails(lotteryId);
 
     if (loading) return <ActivityIndicator size="large" color="#ea5382" />;
