@@ -1,3 +1,4 @@
+import { AntDesign } from "@expo/vector-icons";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 type FabProps = {
@@ -7,7 +8,7 @@ type FabProps = {
 const Fab = ({ onPress }: FabProps) => {
     return (
         <TouchableOpacity style={styles.fab} onPress={onPress}>
-            <Text>Add Lottery</Text>
+            <AntDesign name="plus" size={24} color="white" />
         </TouchableOpacity>
     )
 }
@@ -17,12 +18,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 20,
         right: 20,
-        backgroundColor: 'green',
+        backgroundColor: '#ea5382',
         color: 'white',
         padding: 10,
-        borderRadius: 10,
-        width: 100,
-        height: 50,
+        borderRadius: 50,
+        width: 70,
+        height: 70,
         justifyContent: 'center',
         alignItems: 'center',
     }
