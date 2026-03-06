@@ -2,6 +2,7 @@ import { Lottery } from '../types';
 
 const LOTTERIES_ENDPOINT = 'http://localhost:3000/lotteries';
 const REGISTER_ENDPOINT = 'http://localhost:3000/register';
+const LOTTERY_DETAILS_ENDPOINT = 'http://localhost:3000/lottery';
 
 export async function createNewLottery({
   name,
@@ -70,5 +71,21 @@ export async function registerToLottery({
     console.error(e);
 
     throw e;
+  }
+}
+
+export async function getLotteryById(lotteryId: string) {
+  try {
+  
+      const response = await fetch(`${LOTTERY_DETAILS_ENDPOINT}/${lotteryId}`);
+    
+
+      const body: Awaited<Lottery> = await response.json();
+
+      return body;
+  } catch (error) {
+      console.error(error);
+
+      throw error;
   }
 }

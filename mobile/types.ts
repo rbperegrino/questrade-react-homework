@@ -13,6 +13,7 @@ export interface Lottery {
 
 export type StackList = {
   Home: undefined;
+  LotteryDetails: { id: string };
   AddLottery: undefined;
   Register: { selectedLotteries: Array<string> };
 };
@@ -23,3 +24,10 @@ export type AddLotteryScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export type RegisterScreenRouteProp = RouteProp<StackList, 'Register'>;
+
+export type LotteryDetailsRouteProp = RouteProp<StackList, 'LotteryDetails'>;
+
+export type LotteryDetailsNavigationProp = NativeStackNavigationProp<
+  StackList,
+  'LotteryDetails'
+>;

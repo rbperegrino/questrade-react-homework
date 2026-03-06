@@ -1,7 +1,9 @@
-import { View, Text, StyleSheet, FlatList, Pressable, Animated } from "react-native";
+import { View, Text, StyleSheet, FlatList, Pressable, Animated, TouchableOpacity } from "react-native";
 import { Lottery } from "../../backend/types";
 import Search from "./Search";
 import { useMemo, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { LotteryDetailsNavigationProp } from "../types";
 
 type LotteryListProps = {
     lotteries: Array<Lottery>;
@@ -13,6 +15,7 @@ type LotteryListProps = {
 
 const LotteryList = ({ lotteries, selectedLotteries, onPress, registeredLotteries, scrollY }: LotteryListProps) => {
     const [search, setSearch] = useState('');
+    const { navigate } = useNavigation<LotteryDetailsNavigationProp>();
     const filteredLotteries = useMemo(() => {
         return lotteries.filter((lottery) =>
             lottery.name.includes(search),
@@ -30,7 +33,12 @@ const LotteryList = ({ lotteries, selectedLotteries, onPress, registeredLotterie
             style={[styles.card, isSelected && styles.selectedCard, isRegistered && styles.registeredCard]}
             >
                 <View>
-                    <Text style={styles.cardTitle}>{lottery.name}</Text>
+                    <TouchableOpacity
+                    accessibilityRole="button"
+                    onPress={() => navigate('LotteryDetails', { id: lottery.id })}
+                    >
+                        <Text style={styles.cardTitle}>{lottery.name}</Text>
+                    </TouchableOpacity>
                     <Text style={styles.cardPrize}>{lottery.prize}</Text>
                     <Text style={styles.cardId}>{lottery.id}</Text>
                 </View>
